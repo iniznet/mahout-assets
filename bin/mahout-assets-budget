@@ -1,0 +1,108 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * The build-time asset size check.
+ *
+ * This file is a boundary, not analysed source: it reads the process argument
+ * vector and composes the check. It exits 1 on any entry over its ceiling, so
+ * the CI job fails on a regression rather than printing a number nobody reads.
+ */
+
+declare(strict_types=1);
+
+use Iniznet\Mahout\Assets\AssetBudget;
+use Iniznet\Mahout\Assets\BudgetCheck;
+use Iniznet\Mahout\Assets\Exception\MahoutException;
+use Iniznet\Mahout\Assets\Internal\FileManifestSource;
+use Iniznet\Mahout\Assets\Internal\GzipFileSize;
+use Iniznet\Mahout\Assets\Manifest;
+
+$autoload = dirname(__DIR__).'/vendor/autoload.php';
+if (is_file($autoload)) {
+    require $autoload;
+}
+
+/**
+ * @param list<string> $arguments
+ *
+ * @return array<string, string>
+ */
+$options = static function (array $arguments): array {
+    $parsed = [];
+    foreach (array_slice($arguments, 1) as $argument) {
+        if (!str_starts_with($argument, '--')) {
+            continue;
+        }
+
+        $pair = substr($argument, 2);
+        $separator = strpos($pair, '=');
+        if (false === $separator) {
+            $parsed[$pair] = '';
+
+            continue;
+        }
+
+        $parsed[substr($pair, 0, $separator)] = substr($pair, $separator + 1);
+    }
+
+    return $parsed;
+};
+
+try {
+    $options = $options($argv);
+
+    $manifestPath = $options['manifest'] ?? '';
+    if ('' === $manifestPath) {
+        fwrite(STDERR, 'FAIL: --manifest is required'.PHP_EOL);
+        exit(2);
+    }
+
+    $root = $options['root'] ?? dirname($manifestPath);
+    $budget = AssetBudget::default();
+
+    $budgetPath = $options['budget'] ?? '';
+    if ('' !== $budgetPath) {
+        $raw = file_get_contents($budgetPath);
+        if (false === $raw) {
+            fwrite(STDERR, 'FAIL: the budget file could not be read: '.$budgetPath.PHP_EOL);
+            exit(2);
+        }
+
+        $declared = json_decode($raw, true);
+        if (!is_array($declared)) {
+            fwrite(STDERR, 'FAIL: the budget file is not a JSON object: '.$budgetPath.PHP_EOL);
+            exit(2);
+        }
+
+        $budget = new AssetBudget(
+            cssBytes: is_int($declared['cssBytes'] ?? null) ? $declared['cssBytes'] : $budget->cssBytes,
+            jsBytes: is_int($declared['jsBytes'] ?? null) ? $declared['jsBytes'] : $budget->jsBytes,
+        );
+    }
+
+    $source = new FileManifestSource($manifestPath);
+    if (!$source->readable()) {
+        fwrite(STDERR, 'FAIL: the build manifest could not be read: '.$manifestPath.PHP_EOL);
+        exit(1);
+    }
+
+    $verdict = (new BudgetCheck(new GzipFileSize($root)))->examine(
+        Manifest::fromJson($source->contents()),
+        $budget,
+    );
+
+    if (!$verdict->withinBudget()) {
+        fwrite(STDERR, 'FAIL: '.$verdict->summary().PHP_EOL);
+        exit(1);
+    }
+
+    echo 'PASS: '.$verdict->summary().PHP_EOL;
+    exit(0);
+} catch (MahoutException $exception) {
+    fwrite(STDERR, 'FAIL: '.$exception->getMessage().PHP_EOL);
+    exit(1);
+} catch (Throwable $exception) {
+    fwrite(STDERR, 'FAIL: '.$exception->getMessage().PHP_EOL);
+    exit(1);
+}

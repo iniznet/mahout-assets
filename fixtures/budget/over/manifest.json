@@ -1,0 +1,6 @@
+{
+    "src/front.ts": {
+        "file": "assets/front-1a2b3c4d.js",
+        "isEntry": true
+    }
+}

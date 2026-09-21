@@ -1,0 +1,9 @@
+{
+    "src/front.ts": {
+        "file": "assets/front-1a2b3c4d.js",
+        "css": [
+            "assets/front-5e6f7a8b.css"
+        ],
+        "isEntry": true
+    }
+}

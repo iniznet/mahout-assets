@@ -1,0 +1,18 @@
+{
+    "src/front.ts": {
+        "file": "assets/front-1a2b3c4d.js",
+        "css": [
+            "assets/front-5e6f7a8b.css"
+        ],
+        "isEntry": true
+    },
+    "src/admin.ts": {
+        "file": "assets/admin-9c0d1e2f.js",
+        "isEntry": true
+    },
+    "src/editor.ts": {
+        "file": "assets/editor.js",
+        "version": "editor-explicit",
+        "isEntry": true
+    }
+}
