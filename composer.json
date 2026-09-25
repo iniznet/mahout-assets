@@ -54,7 +54,6 @@
             "@format:check",
             "@stan",
             "@psalm",
-            "@arch",
             "@rector",
             "@test",
             "@budget:check",
@@ -68,5 +67,7 @@
         "branch-alias": {
             "dev-main": "1.0.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
