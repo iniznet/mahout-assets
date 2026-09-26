@@ -368,7 +368,6 @@ only the following, deviations. Each is an ADR, not an edit to the contract.
 | `AssetsProvider` resolves an `AssetsConfig` service from the container rather than reading a config file | The kernel instantiates a provider with no arguments; the composition root declares the config, so the dependency stays explicit and traceable | 0001 |
 | The manifest is read through a `ManifestSource` contract and asset sizes through an `AssetSize` contract | It keeps the filesystem behind one boundary and makes the missing-manifest and budget behaviours provable without a build | 0002 |
 | `composer stan` and `composer arch` run the same shared PHPStan config | A consumer's root config must include the shared one, which already carries the rules | 0003 |
-| The committed `composer.lock` is resolved through the uncommitted path repository | `mahout-devtools` is not published yet, and REP-11 forbids a committed `path` repository | 0003 |
 
 No other rule in this document is relaxed. In particular: no reflection, no
 service locator reached for statically, no trait, no dynamic property, no
