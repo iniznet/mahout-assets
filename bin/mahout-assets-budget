@@ -18,10 +18,29 @@ use Iniznet\Mahout\Assets\Internal\FileManifestSource;
 use Iniznet\Mahout\Assets\Internal\GzipFileSize;
 use Iniznet\Mahout\Assets\Manifest;
 
-$autoload = dirname(__DIR__).'/vendor/autoload.php';
-if (is_file($autoload)) {
-    require $autoload;
+$candidates = [
+        __DIR__ . '/../../../autoload.php',
+        getcwd() . '/vendor/autoload.php',
+        __DIR__ . '/../vendor/autoload.php',
+];
+
+$loaded = null;
+
+foreach ($candidates as $candidate) {
+    if (is_file($candidate)) {
+        $loaded = $candidate;
+
+        break;
+    }
 }
+
+if (null === $loaded) {
+    fwrite(STDERR, 'mahout-assets-budget could not find an autoloader; run it from a project that requires the package' . PHP_EOL);
+
+    exit(1);
+}
+
+require $loaded;
 
 /**
  * @param list<string> $arguments
