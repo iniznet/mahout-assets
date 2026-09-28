@@ -131,8 +131,8 @@ Every documented public class is part of the stable surface within a major.
 
 The package filters `mahout/assets/entries` and fires
 `mahout/assets/before_enqueue`, `mahout/assets/registered` and
-`mahout/assets/manifest_missing`. The generated reference is
-`docs/reference/hooks.md`.
+`mahout/assets/manifest_missing`. The generated references are
+`docs/reference/actions.md` and `docs/reference/filters.md`.
 
 ## Compatibility
 
