@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd0f5afbf4d4b5352e4bf455c098d7b7",
+    "content-hash": "2dfa2890ed95d971ac6267c3180654e9",
     "packages": [
         {
             "name": "iniznet/mahout-kernel",
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/iniznet/mahout-kernel.git",
+                "url": "git@github.com:iniznet/mahout-kernel.git",
                 "reference": "7216af3aa13bb059a73955edf19e241855ffe52a"
             },
             "dist": {
@@ -1806,7 +1806,7 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/iniznet/mahout-devtools.git",
+                "url": "git@github.com:iniznet/mahout-devtools.git",
                 "reference": "1c99b4a2f9318cfc0b15bdef4ef59f551d52c9a1"
             },
             "dist": {
