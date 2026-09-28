@@ -73,7 +73,6 @@
             "@config:check"
         ]
     },
-    "extra": {},
     "minimum-stability": "dev",
     "prefer-stable": true
 }
